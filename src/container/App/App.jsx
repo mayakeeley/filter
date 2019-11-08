@@ -6,7 +6,10 @@ import Post from "../../components/Post";
 
 class App extends React.Component {
   state = {
-    posts: []
+    posts: [],
+    filteredPosts: [],
+    postColor: "",
+    colors: []
   };
 
   componentDidMount() {
@@ -17,21 +20,42 @@ class App extends React.Component {
         const posts = querySnapshot.docs.map(doc => {
           return { ...doc.data(), docId: doc.id };
         });
-        console.log(posts);
+        console.log(posts[0].filter);
         this.setState({
-          posts: posts
+          posts: posts,
+          filteredPosts: posts,
+          colors: [
+            ...new Set(
+              posts.map(color => {
+                return color.filter;
+              })
+            )
+          ]
         });
       });
   }
+
+  updatePosts = color => {
+    const filteredPosts = this.state.posts.filter(
+      post =>
+        post.filter === color.target.innerHTML ||
+        "none" === color.target.innerHTML
+    );
+    this.setState({
+      postColor: color.target.innerHTML,
+      filteredPosts: filteredPosts
+    });
+  };
+
   render() {
     return (
       <main className="App">
-        <Button name="all" filter="none" />
-        <Button name="red" filter="red" />
-        <Button name="green" filter="green" />
-        <Button name="blue" filter="blue" />
+        <Button updatePosts={this.updatePosts} name="none" />
+        {this.state.colors.map((color, index) => (
+          <Button updatePosts={this.updatePosts} name={color} key={index} />
+        ))}
         <section>
-          {this.state.posts.map((post, index) => (
+          {this.state.filteredPosts.map((post, index) => (
             <Post postData={post} key={index} />
           ))}
         </section>

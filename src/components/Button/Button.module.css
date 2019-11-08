@@ -1,11 +1,6 @@
-.red {
-  background-color: red;
-}
-
-.blue {
-  background-color: blue;
-}
-
-.green {
-  background-color: green;
+.none {
+  background-color: black;
+  display: block;
+  margin: auto;
+  width: 200px;
 }
